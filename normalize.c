@@ -25,7 +25,13 @@ void normalizeNOAVX(float* array, int Nvecs)
 
 void normalizeAVX(float* array, int Nvecs)
 {
-    // Implementation that actually that internally uses vector intrinsics
+    // Implementation that actually uses vector intrinsics
+
+    // Idea is to do normalization for 4 vectors placed next to each other simultaneously
+    // then go next 4 vectors, rather than doing some operations in parallel for only one vector; 
+    // it also allows to make summations like (x_i)^2 + (y_i)^2 + (z_i)^2
+    // in parallel for these 4 vectors.
+
     // Note: Nvecs must be a multiple of 4 to work properly,
     // so each iteration here normalizes 4 vectors at once (4*3 = 12 floats)
 
@@ -51,7 +57,7 @@ void normalizeAVX(float* array, int Nvecs)
 
         lreg = _mm_add_ps(reg0, reg1);
         lreg = _mm_add_ps(lreg, reg2);
-        lreg = _mm_sqrt_ps(lreg);
+        lreg = _mm_sqrt_ps(lreg); // in each ith float (i in {0,1,2,3}): sqrt((x_i)^2 + (y_i)^2 + (z_i)^2)
 
         // 3: Normalizing the components
         xs = _mm_div_ps(xs, lreg);

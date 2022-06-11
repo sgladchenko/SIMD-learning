@@ -1,7 +1,7 @@
 #include <immintrin.h>
 #include <stdio.h>
 
-int main_testshuffles()
+int main_understanding_shuffles()
 {
     // Some smaller function to show how the shuffle function works
     // (and how this _MM_SHUFFLE actually works)
